@@ -1,0 +1,135 @@
+<!-- Screen reader announcements -->
+<div aria-live="polite" id="announcer" class="sr-only"></div>
+
+<!-- Skip to main content -->
+<a href="#main-content" class="to-main-content">Skip to main content</a>
+
+<!-- Header -->
+<header class="project-header" role="banner">
+  <div class="container-lg">
+    <!-- <h1>{ content.title }</h1> -->
+  </div>
+</header>
+
+<!-- Main content here -->
+<main id="main-content" class="content" role="main">
+  <div class="container-md">
+    <aside>
+      <h1>Retail sales are up while retailers are down</h1>
+
+      <p>The figure below shows the change of <mark class="retailer-change">retailers</mark> and <mark class="sales-change">retail sales</mark> has changed from 2009 to 2015.  Data compiled from CURA.</p>
+
+      <div class="buttons">
+        <button type="button"
+          class="population"
+          on:click="proxySet(event, { sort: 'rcsPopulation', sortOrder: 'desc' })"
+        >By population</button>
+
+        <button type="button"
+          class="retailer-change"
+          on:click="proxySet(event, { sort: 'rRetailersChange', sortOrder: 'desc' })"
+        >By retailer change</button>
+
+        <button type="button"
+          class="sales-change"
+          on:click="proxySet(event, { sort: 'rSalesChange', sortOrder: 'desc' })"
+        >By sales change</button>
+      </div>
+
+      <figure>
+
+        <div class="bar-chart retail-bar-chart">
+          <div class="labels cf">
+            <div class="negative-values">&lt;- Negative growth</div>
+            <div class="city-names">City</div>
+            <div class="positive-values">Positive growth -&gt;</div>
+          </div>
+
+          <div class="axis">
+
+          </div>
+
+          <div class="bars">
+            {#each sortedCities as city, ci}
+              <div class="city cf">
+                <div class="negative-value bar-set bars-{ city.rSalesChange < 0 && city.rRetailersChange < 0 ? '2' : city.rSalesChange < 0 || city.rRetailersChange < 0 ? '1' : '0' }">
+                  {#if city.rSalesChange < 0 }
+                    <div class="bar negative-bar sales-change" style="width: { Math.abs(city.rSalesChange) * 100 }%;">
+                      <span>{ Math.round(city.rSalesChange * 100) }%</span>
+                    </div>
+                  {/if}
+
+                  {#if city.rRetailersChange < 0 }
+                    <div class="bar negative-bar retailer-change" style="width: { Math.abs(city.rRetailersChange) * 100 }%;">
+                      <span>{ Math.round(city.rRetailersChange * 100) }%</span>
+                    </div>
+                  {/if}
+                </div>
+
+                <div class="city-name">{ city.name }</div>
+
+                <div class="positive-value bar-set bars-{ city.rSalesChange > 0 && city.rRetailersChange > 0 ? '2' : city.rSalesChange > 0 || city.rRetailersChange > 0 ? '1' : '0' }">
+                  {#if city.rSalesChange > 0 }
+                    <div class="bar positive-bar sales-change" style="width: { Math.abs(city.rSalesChange) * 100 }%;">
+                      <span>{ Math.round(city.rSalesChange * 100) }%</span>
+                    </div>
+                  {/if}
+
+                  {#if city.rRetailersChange > 0 }
+                    <div class="bar positive-bar retailer-change" style="width: { Math.abs(city.rRetailersChange) * 100 }%;">
+                      <span>{ Math.round(city.rRetailersChange * 100) }%</span>
+                    </div>
+                  {/if}
+                </div>
+              </div>
+            {/each}
+          </div>
+        </div>
+
+        <figcaption>
+
+        </figcaption>
+      </figure>
+    </aside>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer role="contentinfo">
+  <div class="container-lg">
+    <p>Footer content</p>
+  </div>
+</footer>
+
+<script>
+  import { orderBy } from "lodash";
+
+  export default {
+    methods: {
+      proxySet(event, toSet) {
+        if (event && event.preventDefault) {
+          event.preventDefault();
+        }
+
+        if (toSet) {
+          this.set(toSet);
+        }
+      }
+    },
+
+    computed: {
+      sortedCities({ cities, sort, sortOrder }) {
+        console.log(sort, sortOrder);
+        return orderBy(cities, [sort], [sortOrder]);
+      }
+    },
+
+    data() {
+      return {
+        sort: "rcsPopulation",
+        sortOrder: "desc"
+      };
+    }
+  };
+</script>
+

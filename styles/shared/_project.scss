@@ -1,0 +1,116 @@
+/**
+ * Project specific styling.
+ */
+
+.sales-change {
+  background-color: map-get($theme, "blue-dark");
+  color: $color-white;
+}
+
+.retailer-change {
+  background-color: map-get($theme, "orange-dark");
+  color: $color-white;
+}
+
+.buttons {
+  text-align: center;
+  font-size: 0.65em;
+  margin-bottom: 1.5em;
+}
+
+.bar-chart {
+  .city {
+    width: 100%;
+    margin-bottom: 0.5em;
+    padding: 0.15em;
+
+    &:hover {
+      background-color: map-get($grays, "lightest");
+    }
+  }
+
+  .negative-value {
+    width: 40%;
+    float: left;
+    min-height: 0.5em;
+
+    .bar {
+      float: right;
+      clear: right;
+      position: relative;
+
+      span {
+        font-size: 0.5em;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: -2.75em;
+        color: $color-black;
+      }
+    }
+  }
+
+  .positive-value {
+    width: 40%;
+    float: left;
+    min-height: 0.5em;
+
+    .bar {
+      position: relative;
+
+      span {
+        font-size: 0.5em;
+        display: block;
+        position: absolute;
+        top: 0;
+        right: -2.75em;
+        color: $color-black;
+      }
+    }
+  }
+
+  .city-name {
+    width: 20%;
+    float: left;
+    min-height: 0.5em;
+    font-size: 0.85em;
+    text-align: center;
+  }
+
+  .bar-set {
+    padding-top: 0.1em;
+  }
+
+  .bar {
+    min-height: 0.5em;
+  }
+
+  .bars-1 .bar {
+    height: 1em;
+  }
+
+  .bars-2 .bar {
+    height: 0.5em;
+  }
+
+  .labels {
+    font-size: 0.75em;
+    margin-bottom: 1em;
+
+    .negative-values,
+    .positive-values {
+      width: 40%;
+      float: left;
+    }
+
+    .negative-values {
+      text-align: right;
+    }
+
+    .city-names {
+      width: 20%;
+      float: left;
+      text-align: center;
+    }
+  }
+}
