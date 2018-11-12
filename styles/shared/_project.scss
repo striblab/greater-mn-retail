@@ -14,8 +14,37 @@
 
 .buttons {
   text-align: center;
-  font-size: 0.65em;
-  margin-bottom: 1.5em;
+  font-size: 0.85em;
+  margin-bottom: 2em;
+  padding-top: 0.5em;
+
+  label {
+    margin-right: 1em;
+  }
+
+  .button-link {
+    color: $color-black;
+    padding: 0.1em 0.25em;
+
+    &.active {
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+  .sales-change {
+    background-color: transparent;
+    color: map-get($theme, "blue-dark");
+  }
+
+  .retailer-change {
+    background-color: transparent;
+    color: map-get($theme, "orange-dark");
+  }
 }
 
 .bar-chart {
@@ -46,6 +75,7 @@
         top: 0;
         left: -2.75em;
         color: $color-black;
+        line-height: 2em;
       }
     }
   }
@@ -65,6 +95,7 @@
         top: 0;
         right: -2.75em;
         color: $color-black;
+        line-height: 2em;
       }
     }
   }
@@ -75,6 +106,8 @@
     min-height: 0.5em;
     font-size: 0.85em;
     text-align: center;
+    padding-left: 0.25em;
+    padding-right: 0.25em;
   }
 
   .bar-set {
@@ -91,11 +124,15 @@
 
   .bars-2 .bar {
     height: 0.5em;
+
+    span {
+      line-height: 1em;
+    }
   }
 
   .labels {
     font-size: 0.75em;
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
 
     .negative-values,
     .positive-values {
@@ -111,6 +148,38 @@
       width: 20%;
       float: left;
       text-align: center;
+    }
+  }
+
+  .axis {
+    width: 100%;
+    position: relative;
+    border-bottom: 1px solid $color-black;
+    height: 0.5em;
+    margin-top: 0.5em;
+
+    .tick {
+      position: absolute;
+      height: 0.5em;
+      border-left: 1px solid $color-black;
+
+      span {
+        font-size: 0.65em;
+        position: absolute;
+        margin-top: -0.65em;
+        left: 0.2em;
+        display: inline-block;
+      }
+
+      &.tick-right {
+        border-left: none;
+        border-right: 1px solid $color-black;
+
+        span {
+          left: auto;
+          right: 0.2em;
+        }
+      }
     }
   }
 }

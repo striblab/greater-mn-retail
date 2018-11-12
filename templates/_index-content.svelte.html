@@ -15,38 +15,69 @@
 <main id="main-content" class="content" role="main">
   <div class="container-md">
     <aside>
-      <h1>Retail sales are up while retailers are down</h1>
+      <h1>In Greater Minnesota, retail sales are up while retailers are down</h1>
 
-      <p>The figure below shows the change of <mark class="retailer-change">retailers</mark> and <mark class="sales-change">retail sales</mark> has changed from 2009 to 2015.  Data compiled from CURA.</p>
+      <p>The figure below shows the <strong>change</strong> of the <mark class="retailer-change">number of retailers</mark> and <mark class="sales-change">retail sales</mark> from 2009 to 2015 in Greater Minnesota.  Over that period, many places saw an increase in sales, but a decrese in the number of overal retailers.  Data compiled from <a href="http://www.cura.umn.edu/" target="_blank" rel="noopener">CURA</a>.</p>
 
       <div class="buttons">
+        <label>Sort by</label>
+
         <button type="button"
-          class="population"
+          class="button-link population { sort === 'rcsPopulation' ? 'active' : '' }"
           on:click="proxySet(event, { sort: 'rcsPopulation', sortOrder: 'desc' })"
-        >By population</button>
+        >Population</button>
 
         <button type="button"
-          class="retailer-change"
+          class="button-link retailer-change { sort === 'rRetailersChange' ? 'active' : '' }"
           on:click="proxySet(event, { sort: 'rRetailersChange', sortOrder: 'desc' })"
-        >By retailer change</button>
+        >Change in retailers</button>
 
         <button type="button"
-          class="sales-change"
+          class="button-link sales-change { sort === 'rSalesChange' ? 'active' : '' }"
           on:click="proxySet(event, { sort: 'rSalesChange', sortOrder: 'desc' })"
-        >By sales change</button>
+        >Change in sales</button>
       </div>
 
       <figure>
-
         <div class="bar-chart retail-bar-chart">
           <div class="labels cf">
-            <div class="negative-values">&lt;- Negative growth</div>
-            <div class="city-names">City</div>
-            <div class="positive-values">Positive growth -&gt;</div>
-          </div>
+            <div class="negative-values">
+              <div>Negative change</div>
 
-          <div class="axis">
+              <div class="axis axis-postive">
+                <div class="tick tick-right" style="right: { scale(0) }%;">
+                  <span>0%</span>
+                </div>
 
+                <div class="tick tick-right" style="right: { scale(0.5) }%;">
+                  <span>-50%</span>
+                </div>
+
+                <div class="tick tick-right" style="right: { scale(1) }%;">
+                  <span>-100%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="city-names">&nbsp;</div>
+
+            <div class="positive-values">
+              <div>Positive change</div>
+
+              <div class="axis axis-postive">
+                <div class="tick" style="left: { scale(0) }%;">
+                  <span>0%</span>
+                </div>
+
+                <div class="tick" style="left: { scale(0.5) }%;">
+                  <span>+50%</span>
+                </div>
+
+                <div class="tick" style="left: { scale(1) }%;">
+                  <span>+100%</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="bars">
@@ -54,14 +85,22 @@
               <div class="city cf">
                 <div class="negative-value bar-set bars-{ city.rSalesChange < 0 && city.rRetailersChange < 0 ? '2' : city.rSalesChange < 0 || city.rRetailersChange < 0 ? '1' : '0' }">
                   {#if city.rSalesChange < 0 }
-                    <div class="bar negative-bar sales-change" style="width: { Math.abs(city.rSalesChange) * 100 }%;">
-                      <span>{ Math.round(city.rSalesChange * 100) }%</span>
+                    <div
+                      class="bar negative-bar sales-change"
+                      style="width: { scale(Math.abs(city.rSalesChange)) }%;"
+                      title="{ (city.rSalesChange * 100).toFixed(4) }% change in retail sales"
+                    >
+                      <span>{ city.rSalesChange > -0.01 ? '> -1' : Math.round(city.rSalesChange * 100) }%</span>
                     </div>
                   {/if}
 
                   {#if city.rRetailersChange < 0 }
-                    <div class="bar negative-bar retailer-change" style="width: { Math.abs(city.rRetailersChange) * 100 }%;">
-                      <span>{ Math.round(city.rRetailersChange * 100) }%</span>
+                    <div
+                      class="bar negative-bar retailer-change"
+                      style="width: { scale(Math.abs(city.rRetailersChange)) }%;"
+                      title="{ (city.rRetailersChange * 100).toFixed(4) }% change in number of retailers"
+                    >
+                      <span>{ city.rRetailersChange > -0.01 ? '> -1' : Math.round(city.rRetailersChange * 100) }%</span>
                     </div>
                   {/if}
                 </div>
@@ -70,14 +109,22 @@
 
                 <div class="positive-value bar-set bars-{ city.rSalesChange > 0 && city.rRetailersChange > 0 ? '2' : city.rSalesChange > 0 || city.rRetailersChange > 0 ? '1' : '0' }">
                   {#if city.rSalesChange > 0 }
-                    <div class="bar positive-bar sales-change" style="width: { Math.abs(city.rSalesChange) * 100 }%;">
-                      <span>{ Math.round(city.rSalesChange * 100) }%</span>
+                    <div
+                      class="bar positive-bar sales-change"
+                      style="width: { scale(Math.abs(city.rSalesChange)) }%;"
+                      title="{ (city.rSalesChange * 100).toFixed(4) }% change in retail sales"
+                    >
+                      <span>{ city.rSalesChange < 0.01 ? '< 1' : Math.round(city.rSalesChange * 100) }%</span>
                     </div>
                   {/if}
 
                   {#if city.rRetailersChange > 0 }
-                    <div class="bar positive-bar retailer-change" style="width: { Math.abs(city.rRetailersChange) * 100 }%;">
-                      <span>{ Math.round(city.rRetailersChange * 100) }%</span>
+                    <div
+                      class="bar positive-bar retailer-change"
+                      style="width: { scale(Math.abs(city.rRetailersChange)) }%;"
+                      title="{ (city.rRetailersChange * 100).toFixed(4) }% change in number of retailers"
+                    >
+                      <span>{ city.rRetailersChange < 0.01 ? '< 1' : Math.round(city.rRetailersChange * 100) }%</span>
                     </div>
                   {/if}
                 </div>
@@ -94,15 +141,9 @@
   </div>
 </main>
 
-<!-- Footer -->
-<footer role="contentinfo">
-  <div class="container-lg">
-    <p>Footer content</p>
-  </div>
-</footer>
-
 <script>
-  import { orderBy } from "lodash";
+  import { orderBy, maxBy } from "lodash";
+  import { scaleLinear } from "d3-scale";
 
   export default {
     methods: {
@@ -119,8 +160,26 @@
 
     computed: {
       sortedCities({ cities, sort, sortOrder }) {
-        console.log(sort, sortOrder);
         return orderBy(cities, [sort], [sortOrder]);
+      },
+
+      maxChange({ cities }) {
+        if (!cities) {
+          return;
+        }
+
+        let m = maxBy(cities, c => {
+          return Math.max(Math.abs(c.rSalesChange), Math.abs(c.rRetailersChange));
+        });
+
+        return Math.max(Math.abs(m.rSalesChange), Math.abs(m.rRetailersChange));
+      },
+
+      scale({ maxChange }) {
+        console.log(maxChange);
+        return scaleLinear()
+          .domain([0, maxChange])
+          .range([0, 100]);
       }
     },
 
