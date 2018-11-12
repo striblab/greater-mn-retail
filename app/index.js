@@ -17,13 +17,15 @@ utils.environmentNoting();
 
 // Auto enable Pym for embedding.  This will enable a Pym Child if
 // the url contains ?pym=true
-utils.autoEnablePym();
+let pymChild = utils.autoEnablePym();
 
 // Set up
 const app = new Content({
   target: document.querySelector('.article-lcd-body-content'),
   data: {
-    cities: cityRetail
+    cities: cityRetail,
+    pymChild,
+    embedded: utils.isEmbedded()
   }
 });
 

@@ -12,10 +12,28 @@
   color: $color-white;
 }
 
+mark {
+  white-space: nowrap;
+}
+
+.embedded {
+  .container,
+  .container-xs,
+  .container-sm,
+  .container-md,
+  .container-lg,
+  .container-xl,
+  .container-fluid,
+  .container-copy {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
 .buttons {
   text-align: center;
   font-size: 0.85em;
-  margin-bottom: 2em;
+  margin-bottom: 2.5em;
   padding-top: 0.5em;
 
   label {
@@ -48,9 +66,14 @@
 }
 
 .bar-chart {
+  .embedded & {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
+
   .city {
     width: 100%;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.1em;
     padding: 0.15em;
 
     &:hover {
@@ -77,6 +100,11 @@
         color: $color-black;
         line-height: 2em;
       }
+
+      &.inside-label span {
+        left: 0.5em;
+        color: $color-white;
+      }
     }
   }
 
@@ -97,6 +125,11 @@
         color: $color-black;
         line-height: 2em;
       }
+
+      &.inside-label span {
+        right: 0.5em;
+        color: $color-white;
+      }
     }
   }
 
@@ -104,10 +137,9 @@
     width: 20%;
     float: left;
     min-height: 0.5em;
-    font-size: 0.85em;
+    font-size: 0.75em;
     text-align: center;
-    padding-left: 0.25em;
-    padding-right: 0.25em;
+    padding: 0.15em 0.25em;
   }
 
   .bar-set {
@@ -124,6 +156,10 @@
 
   .bars-2 .bar {
     height: 0.5em;
+
+    &:first-child {
+      margin-bottom: 0.1em;
+    }
 
     span {
       line-height: 1em;

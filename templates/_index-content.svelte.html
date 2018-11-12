@@ -12,7 +12,7 @@
 </header>
 
 <!-- Main content here -->
-<main id="main-content" class="content" role="main">
+<main id="main-content" class="content { embedded ? 'embedded' : '' }" role="main">
   <div class="container-md">
     <aside>
       <h1>In Greater Minnesota, retail sales are up while retailers are down</h1>
@@ -38,7 +38,7 @@
         >Change in sales</button>
       </div>
 
-      <figure>
+      <figure class="cf">
         <div class="bar-chart retail-bar-chart">
           <div class="labels cf">
             <div class="negative-values">
@@ -86,8 +86,8 @@
                 <div class="negative-value bar-set bars-{ city.rSalesChange < 0 && city.rRetailersChange < 0 ? '2' : city.rSalesChange < 0 || city.rRetailersChange < 0 ? '1' : '0' }">
                   {#if city.rSalesChange < 0 }
                     <div
-                      class="bar negative-bar sales-change"
-                      style="width: { scale(Math.abs(city.rSalesChange)) }%;"
+                      class="bar negative-bar sales-change { city.rSalesChange < -1 ? 'inside-label' : '' }"
+                      style="width: { Math.max(1, scale(Math.abs(city.rSalesChange))) }%;"
                       title="{ (city.rSalesChange * 100).toFixed(4) }% change in retail sales"
                     >
                       <span>{ city.rSalesChange > -0.01 ? '> -1' : Math.round(city.rSalesChange * 100) }%</span>
@@ -96,8 +96,8 @@
 
                   {#if city.rRetailersChange < 0 }
                     <div
-                      class="bar negative-bar retailer-change"
-                      style="width: { scale(Math.abs(city.rRetailersChange)) }%;"
+                      class="bar negative-bar retailer-change { city.rRetailersChange < -1 ? 'inside-label' : '' }"
+                      style="width: { Math.max(1, scale(Math.abs(city.rRetailersChange))) }%;"
                       title="{ (city.rRetailersChange * 100).toFixed(4) }% change in number of retailers"
                     >
                       <span>{ city.rRetailersChange > -0.01 ? '> -1' : Math.round(city.rRetailersChange * 100) }%</span>
@@ -110,8 +110,8 @@
                 <div class="positive-value bar-set bars-{ city.rSalesChange > 0 && city.rRetailersChange > 0 ? '2' : city.rSalesChange > 0 || city.rRetailersChange > 0 ? '1' : '0' }">
                   {#if city.rSalesChange > 0 }
                     <div
-                      class="bar positive-bar sales-change"
-                      style="width: { scale(Math.abs(city.rSalesChange)) }%;"
+                      class="bar positive-bar sales-change { city.rSalesChange > 1 ? 'inside-label' : '' }"
+                      style="width: { Math.max(1, scale(Math.abs(city.rSalesChange))) }%;"
                       title="{ (city.rSalesChange * 100).toFixed(4) }% change in retail sales"
                     >
                       <span>{ city.rSalesChange < 0.01 ? '< 1' : Math.round(city.rSalesChange * 100) }%</span>
@@ -120,8 +120,8 @@
 
                   {#if city.rRetailersChange > 0 }
                     <div
-                      class="bar positive-bar retailer-change"
-                      style="width: { scale(Math.abs(city.rRetailersChange)) }%;"
+                      class="bar positive-bar retailer-change { city.rRetailersChange > 1 ? 'inside-label' : '' }"
+                      style="width: { Math.max(1, scale(Math.abs(city.rRetailersChange))) }%;"
                       title="{ (city.rRetailersChange * 100).toFixed(4) }% change in number of retailers"
                     >
                       <span>{ city.rRetailersChange < 0.01 ? '< 1' : Math.round(city.rRetailersChange * 100) }%</span>
@@ -133,12 +133,15 @@
           </div>
         </div>
 
-        <figcaption>
-
+        <figcaption class="sr-only">
+          The bar chart above shows the change in number of retailers and retail sales from 2009 to 2015 for cities in Greater Minnesota.  <a href="http://www.cura.umn.edu/" target="_blank" rel="noopener">Data from the Center for Urban and Regional Affairs</a>.
         </figcaption>
       </figure>
     </aside>
   </div>
+
+  <!-- for pym -->
+  <div class="cf">&nbsp;</div>
 </main>
 
 <script>
@@ -146,6 +149,13 @@
   import { scaleLinear } from "d3-scale";
 
   export default {
+    oncreate() {
+      let { pymChild } = this.get();
+      if (pymChild) {
+        pymChild.sendHeight();
+      }
+    },
+
     methods: {
       proxySet(event, toSet) {
         if (event && event.preventDefault) {
@@ -185,7 +195,7 @@
 
     data() {
       return {
-        sort: "rcsPopulation",
+        sort: "rSalesChange",
         sortOrder: "desc"
       };
     }
