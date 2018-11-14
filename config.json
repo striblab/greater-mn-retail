@@ -8,20 +8,31 @@
     "pkg": "./package.json"
   },
 
+  "cms": {
+    "pages": [
+      {
+        "id": "index",
+        "default": true
+      },
+      {
+        "id": "map",
+        "styles": "index"
+      }
+    ]
+  },
 
   "social": {
     "image": "assets/images/strib/strib-logo-name-social-card.png"
   },
 
   "styles": {
-    "globals": [
-    ]
+    "globals": ["https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css"]
   },
   "js": {
     "globals": [
       "https://cdn.polyfill.io/v2/polyfill.min.js",
       "https://static.startribune.com/assets/libs/pym.js/1.3.2/pym.v1.min.js",
-      "https://static.startribune.com/assets/libs/lodash/4.17.4/lodash.min.js"
+      "https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js"
     ]
   },
   "publishToken": "578a1b1fd069fffe3afbba79915ea91e",

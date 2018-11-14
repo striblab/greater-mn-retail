@@ -1,0 +1,200 @@
+<!-- Screen reader announcements -->
+<div aria-live="polite" id="announcer" class="sr-only"></div>
+
+<!-- Skip to main content -->
+<a href="#main-content" class="to-main-content">Skip to main content</a>
+
+<!-- Header -->
+<header class="project-header" role="banner">
+  <div class="container-lg">
+    <!-- <h1>{ content.title }</h1> -->
+  </div>
+</header>
+
+<!-- Main content here -->
+<main id="main-content" class="content { embedded ? 'embedded' : '' }" role="main">
+  <div class="container-md">
+    <aside>
+      <h1>Where retails sales have grown the most in Greater MN</h1>
+
+      <p>The figure below shows the change in retail sales from 2009-2015 for cities in Greater Minnesota.  Data compiled from <a href="http://www.cura.umn.edu/" target="_blank" rel="noopener">CURA</a>.</p>
+
+      <div class="map-legend">
+        <div class="swatch">
+          <div class="swatch-representation" style="width: { scale(-0.25) * 2 }px; height: { scale(-0.25) * 2 }px; background-color: { colorValue(-0.25) };"></div>
+          <div class="swatch-label">-25%</div>
+        </div>
+
+        <div class="swatch">
+          <div class="swatch-representation" style="width: { scale(0) * 2 }px; height: { scale(0) * 2 }px; background-color: { colorValue(0) };"></div>
+          <div class="swatch-label">0%</div>
+        </div>
+
+        <div class="swatch">
+          <div class="swatch-representation" style="width: { scale(0.5) * 2 }px; height: { scale(0.5) * 2 }px; background-color: { colorValue(0.5) };"></div>
+          <div class="swatch-label">50%</div>
+        </div>
+
+        <div class="swatch">
+          <div class="swatch-representation" style="width: { scale(1) * 2 }px; height: { scale(1) * 2 }px; background-color: { colorValue(1) };"></div>
+          <div class="swatch-label">100%</div>
+        </div>
+
+        <br>
+        <div class="legend-label">Change in retail sales</div>
+      </div>
+
+      <figure class="cf">
+        <div id="greater-mn-map" class="map-figure" ref:mapContainer></div>
+
+        <figcaption class="sr-only">
+          The figure below shows the change in retail sales from 2009-2015 for cities in Greater Minnesota.  <a href="http://www.cura.umn.edu/" target="_blank" rel="noopener">Data from the Center for Urban and Regional Affairs</a>.
+        </figcaption>
+      </figure>
+    </aside>
+  </div>
+
+  <!-- for pym -->
+  <div class="cf">&nbsp;</div>
+</main>
+
+<script>
+  import { orderBy, maxBy, minBy } from "lodash";
+  import { scaleSqrt } from "d3-scale";
+
+  export default {
+    oncreate() {
+      let { cities, pymChild, scale } = this.get();
+      if (pymChild) {
+        pymChild.sendHeight();
+      }
+
+      // Draw map
+      this.drawMap();
+      this.drawMarkers();
+    },
+
+    methods: {
+      drawMap() {
+        L.mapbox.accessToken =
+          "pk.eyJ1Ijoic2hhZG93ZmxhcmUiLCJhIjoiODRHdjBSWSJ9.lF4ymp-69zdGvZ5X4Tokzg";
+        let map = L.mapbox
+          .map("greater-mn-map", undefined, {
+            attributionControl: false,
+            scrollWheelZoom: false
+          })
+          .setView([46.7296, -94.6859], 7);
+        let styleLayer = L.mapbox
+          .styleLayer("mapbox://styles/shadowflare/cjfljh7oh6v6k2smuvb3jftac")
+          .addTo(map);
+
+        this.set({ map, styleLayer });
+      },
+
+      drawMarkers() {
+        let { map, cities, pymChild, scale, colorValue } = this.get();
+        let markers = [];
+
+        let markerTemplate = c => `
+          <div class="marker-content">
+            <strong class="city-name">${c.name}</strong>
+
+            <ul>
+              <li>Change in retail sales: <strong>${Math.round(
+                c.rSalesChange * 100
+              )}%</strong></li>
+              <li>Change in number of retailers: <strong>${Math.round(
+                c.rRetailersChange * 100
+              )}%</strong></li>
+            </ul>
+
+            ${c.notes ? "<em>" + c.notes + "</em>" : ""}
+          </div>
+        `;
+
+        cities.forEach(c => {
+          let marker = L.circleMarker([c.lat, c.lng], {
+            radius: scale(c.rSalesChange),
+            stroke: false,
+            fillColor: colorValue(c.rSalesChange),
+            fillOpacity: 0.8
+          }).addTo(map);
+          marker.bindPopup(markerTemplate(c));
+          markers.push(marker);
+        });
+
+        // Make feature group and fit
+        let markerGroup = new L.featureGroup(markers);
+        map.fitBounds(markerGroup.getBounds());
+
+        this.set({ markers, markerGroup });
+      },
+
+      proxySet(event, toSet) {
+        if (event && event.preventDefault) {
+          event.preventDefault();
+        }
+
+        if (toSet) {
+          this.set(toSet);
+        }
+      }
+    },
+
+    helpers: {},
+
+    computed: {
+      sortedCities({ cities, sort, sortOrder }) {
+        return orderBy(cities, [sort], [sortOrder]);
+      },
+
+      maxChange({ cities }) {
+        if (!cities) {
+          return;
+        }
+
+        let m = maxBy(cities, c => {
+          return Math.max(Math.abs(c.rSalesChange), Math.abs(c.rRetailersChange));
+        });
+
+        return Math.max(Math.abs(m.rSalesChange), Math.abs(m.rRetailersChange));
+      },
+
+      minChange({ cities }) {
+        if (!cities) {
+          return;
+        }
+
+        let m = minBy(cities, c => {
+          return Math.min(c.rSalesChange, c.rRetailersChange);
+        });
+
+        return Math.min(m.rSalesChange, m.rRetailersChange);
+      },
+
+      scale({ minChange, maxChange }) {
+        return scaleSqrt()
+          .domain([minChange, maxChange])
+          .range([3, 25]);
+      }
+    },
+
+    data() {
+      return {
+        sort: "rSalesChange",
+        sortOrder: "desc",
+        // More accessible here
+        colorValue: value => {
+          if (value < 0) {
+            return "#9e003f";
+          } else if (value > 0) {
+            return "#1d78af";
+          } else {
+            return "#565656";
+          }
+        }
+      };
+    }
+  };
+</script>
+

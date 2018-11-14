@@ -26,7 +26,9 @@ function buildData() {
             rSalesChange: parseFloat(d['R Change 2009-2015']),
             rRetailers2015: parseInt(d['R Retailers 2015'], 10),
             rRetailersChange: parseFloat(d['R Retailers Change 2009-2015']),
-            notes: d.Notes ? d.Notes.trim() : undefined
+            notes: d.Notes ? d.Notes.trim() : undefined,
+            lat: parseFloat(d.lat),
+            lng: parseFloat(d.lng)
           };
         });
 
