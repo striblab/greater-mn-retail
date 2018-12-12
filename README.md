@@ -1,8 +1,6 @@
-# Greater Mn Retail
+# Greater MN Retail
 
-Analysis on greater mn retail sales. 
-
-
+Analysis on Greater MN retail sales. Data provided by Center for Urban and Regional Affairs (CURA) via report. Loosely formatted version located at `sources/greater-mn-retail-edited.csv`.
 
 ## Publishing
 

@@ -6,6 +6,7 @@ config.custom.json
 
 # Embargoed
 sources/greater-mn-retail*
+sources/*.docx
 assets/data/greater-mn-retail*
 
 # Data parts
